@@ -21,8 +21,6 @@ foreach(CustomerManager::getList() as $customer){
 //    CategoryService::run();
     ProductService::run();
 
-    echo $customer;
-
 }
 
 
