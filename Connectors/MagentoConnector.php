@@ -27,7 +27,7 @@ class MagentoConnector {
         }
 
         try{
-            MagentoConnector::$sessions[$customer->name] = MagentoConnector::$ws->login('','');
+            MagentoConnector::$sessions[$customer->name] = MagentoConnector::$ws->login($customer->user,$customer->pass);
         }catch (SoapFault $e){
             Logger::error('Falha ao autenticar no Webservice.',$e,MagentoConnector::$ws->__getLastRequest());
         }

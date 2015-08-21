@@ -11,7 +11,7 @@ class CustomerManager {
 
         if(count(self::$customerList) < 1)
             self::$customerList = array(
-                new Customer('balai','www.balai.com.br')
+                new Customer($_POST['name'],$_POST['url'],$_POST['user'],$_POST['pass'])
             );
 
         return self::$customerList;
