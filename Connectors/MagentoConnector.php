@@ -36,7 +36,7 @@ class MagentoConnector {
     public static function getImages($sku){
 
         $sql = "SELECT g.value FROM `catalog_product_entity_media_gallery` as g
-JOIN `catalog_product_entity_media_g-allery_value` as v
+JOIN `catalog_product_entity_media_gallery_value` as v
 ON g.value_id = v.value_id
 WHERE v.disabled = 0 AND
 g.entity_id = $sku";
