@@ -50,6 +50,15 @@
                     <div class="nome_campo" >Password: </div>
                     <div class="campo"><input name="pass" value="" maxlenght="60" type="password" class="forms"></div>
 
+                    <div class="nome_campo" >DB host: </div>
+                    <div class="campo"><input name="dbhost" value="" maxlenght="60" type="text" class="forms"></div>
+
+                    <div class="nome_campo" >Usuario DB: </div>
+                    <div class="campo"><input name="userdb" value="" maxlenght="60" type="text" class="forms"></div>
+
+                    <div class="nome_campo" >Password DB: </div>
+                    <div class="campo"><input name="passdb" value="" maxlenght="60" type="password" class="forms"></div>
+
                     </center>
                     <p></p>
                 </div>
@@ -67,7 +76,7 @@
                     <div class="campo"><input name="vtexuser" value="" maxlenght="60" type="text" class="forms"></div>
 
                     <div class="nome_campo" >Senha vtex: </div>
-                    <div class="campo"><input name="vtexpass" value="" maxlenght="60" type="text" class="forms"></div>
+                    <div class="campo"><input name="vtexpass" value="" maxlenght="60" type="password" class="forms"></div>
 
                     </center>
                      <p></p>

@@ -41,7 +41,7 @@ ON g.value_id = v.value_id
 WHERE v.disabled = 0 AND
 g.entity_id = $sku";
 
-        $con=mysql_connect("","","") or
+        $con=mysql_connect($_POST['dbhost'],$_POST['userdb'],$_POST['passdb']) or
         die("Could not connect: " . mysql_error());
 
         mysql_select_db(strtolower(CustomerManager::getCurrentCustomer()->name));
@@ -65,7 +65,7 @@ g.entity_id = $sku";
         $sql = "SELECT s.child_id FROM `catalog_product_relation` as s
 WHERE s.parent_id = $id";
 
-        $con=mysql_connect("","","") or
+        $con=mysql_connect($_POST['dbhost'],$_POST['userdb'],$_POST['passdb']) or
         die("Could not connect: " . mysql_error());
 
         mysql_select_db(strtolower(CustomerManager::getCurrentCustomer()->name));
