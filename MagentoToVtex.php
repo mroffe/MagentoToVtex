@@ -14,7 +14,7 @@ include 'Managers/CustomerManager.php';
 
 foreach(CustomerManager::getList() as $customer){
 
-    $storeConfig = new StoreConfig(31,2,2000000,1,true);
+    $storeConfig = new StoreConfig($_POST['vtexdepartament'],$_POST['vtexcategory'],$_POST['vtexbrand'],1,true);
     CustomerManager::setCurrentCustomer($customer);
     CustomerManager::setStoreConfig($storeConfig);
 

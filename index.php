@@ -78,6 +78,15 @@
                     <div class="nome_campo" >Senha vtex: </div>
                     <div class="campo"><input name="vtexpass" value="" maxlenght="60" type="password" class="forms"></div>
 
+                    <div class="nome_campo" >Departament vtex: </div>
+                    <div class="campo"><input name="vtexdepartament" value="" maxlenght="60" type="text" class="forms"></div>
+
+                    <div class="nome_campo" >Category vtex: </div>
+                    <div class="campo"><input name="vtexcategory" value="" maxlenght="60" type="text" class="forms"></div>
+
+                    <div class="nome_campo" >Brand vtex: </div>
+                    <div class="campo"><input name="vtexbrand" value="" maxlenght="60" type="text" class="forms"></div>
+
                     </center>
                      <p></p>
                 </div>
