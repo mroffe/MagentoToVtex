@@ -11,12 +11,12 @@ class VtexConnector {
     public static $ws;
     public static $api;
 
-    public static function connect($customer){
+    public static function connect(){
         try{
-            VtexConnector::$ws = new SoapClient('http://webservice-'.$_POST['accountname'].'.vtexcommerce.com.br/service.svc?wsdl',
+            VtexConnector::$ws = new SoapClient('http://webservice-'.StoreConfigManager::getVtexAccountName().'.vtexcommerce.com.br/service.svc?singleWsdl',
                 array(
-                    'login'          => $_POST['vtexuser'],
-                    'password'       => $_POST['vtexpass'],
+                    'login'          => StoreConfigManager::getVtexUser(),
+                    'password'       => StoreConfigManager::getVtexPass(),
                     'trace' => 1,
                     'exception' => 0
                 ));

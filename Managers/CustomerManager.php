@@ -11,7 +11,7 @@ class CustomerManager {
 
         if(count(self::$customerList) < 1)
             self::$customerList = array(
-                new Customer($_POST['name'],$_POST['url'],$_POST['user'],$_POST['pass'])
+                new Customer(StoreConfigManager::getName(),StoreConfigManager::getUrl(),StoreConfigManager::getMagentoUser(),StoreConfigManager::getMagentoPass())
             );
 
         return self::$customerList;
@@ -19,8 +19,8 @@ class CustomerManager {
 
     public static function setCurrentCustomer($customer){
         self::$currentCustomer = $customer;
-        MagentoConnector::connect($customer);
-        VtexConnector::connect($customer);
+        MagentoConnector::connect();
+        VtexConnector::connect();
     }
 
     public static function getCurrentCustomer(){

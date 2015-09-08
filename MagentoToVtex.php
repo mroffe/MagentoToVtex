@@ -11,16 +11,43 @@ include 'Models/StoreConfig.php';
 include 'Services/CategoryService.php';
 include 'Services/ProductService.php';
 include 'Managers/CustomerManager.php';
+include 'Managers/StoreConfigManager.php';
+include 'Helpers/Slug.php';
+
+//Form
+$storeConfig = StoreConfig::withPost($_POST);
+
+//Manual run
+//$storeConfigData = array(
+//    'departmentId' => '',
+//    'categoryId' => '',
+//    'brandId' => '',
+//    'name' => '',
+//    'url' => '',
+//    'dbHost' => '',
+//    'dbName' => '',
+//    'dbUser' => '',
+//    'dbPass' => '',
+//    'vtexUser' => '',
+//    'vtexPass' => '',
+//    'vtexAccountName' => '',
+//    'magentoUser' => '',
+//    'magentoPass' => '',
+//    'productType' => ''
+//);
+
+//$storeConfig = StoreConfig::withData($storeConfigData);
+
+StoreConfigManager::setStoreConfig($storeConfig);
 
 foreach(CustomerManager::getList() as $customer){
 
-    $storeConfig = new StoreConfig($_POST['vtexdepartament'],$_POST['vtexcategory'],$_POST['vtexbrand'],1,true);
     CustomerManager::setCurrentCustomer($customer);
     CustomerManager::setStoreConfig($storeConfig);
 
-//    CategoryService::run();
+    //BrandService::run();
+    //CategoryService::run();
     ProductService::run();
-
 }
 
 

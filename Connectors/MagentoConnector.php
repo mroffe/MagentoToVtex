@@ -13,21 +13,21 @@ class MagentoConnector {
 
     public static function getActiveSession(){
 
-        return MagentoConnector::$sessions[CustomerManager::getCurrentCustomer()->name];
+        return MagentoConnector::$sessions[StoreConfigManager::getName()];
     }
 
-    public static function connect($customer){
+    public static function connect(){
         try{
-            MagentoConnector::$ws = new SoapClient('http://'.$customer->url.'/api/v2_soap/?wsdl',array(
+            MagentoConnector::$ws = new SoapClient('http://'.StoreConfigManager::getUrl().'/api/v2_soap/?wsdl',array(
                 'trace' => 1,
                 'exception' => 0
             ));
         }catch(SoapFault $e){
-            Logger::error('Falha ao connectar ao Webservice.',$e,null);
+            Logger::error('Falha ao recuperar WSDL do Webservice.',$e,null);
         }
 
         try{
-            MagentoConnector::$sessions[$customer->name] = MagentoConnector::$ws->login($customer->user,$customer->pass);
+            MagentoConnector::$sessions[StoreConfigManager::getName()] = MagentoConnector::$ws->login(StoreConfigManager::getMagentoUser(),StoreConfigManager::getMagentoPass());
         }catch (SoapFault $e){
             Logger::error('Falha ao autenticar no Webservice.',$e,MagentoConnector::$ws->__getLastRequest());
         }
@@ -35,16 +35,17 @@ class MagentoConnector {
 
     public static function getImages($sku){
 
-        $sql = "SELECT g.value FROM `catalog_product_entity_media_gallery` as g
+        $sql = "SELECT g.value, v.defaultimg FROM `catalog_product_entity_media_gallery` as g
 JOIN `catalog_product_entity_media_gallery_value` as v
 ON g.value_id = v.value_id
 WHERE v.disabled = 0 AND
-g.entity_id = $sku";
+g.entity_id = $sku
+ORDER BY v.position";
 
-        $con=mysql_connect($_POST['dbhost'],$_POST['userdb'],$_POST['passdb']) or
+        $con=mysql_connect(StoreConfigManager::getDbHost(),StoreConfigManager::getDbUser(),StoreConfigManager::getDbPass()) or
         die("Could not connect: " . mysql_error());
 
-        mysql_select_db(strtolower(CustomerManager::getCurrentCustomer()->name));
+        mysql_select_db(strtolower(StoreConfigManager::getDbName()));
 
         $result = mysql_query($sql);
 
@@ -65,10 +66,10 @@ g.entity_id = $sku";
         $sql = "SELECT s.child_id FROM `catalog_product_relation` as s
 WHERE s.parent_id = $id";
 
-        $con=mysql_connect($_POST['dbhost'],$_POST['userdb'],$_POST['passdb']) or
+        $con=mysql_connect(StoreConfigManager::getDbHost(),StoreConfigManager::getDbUser(),StoreConfigManager::getDbPass()) or
         die("Could not connect: " . mysql_error());
 
-        mysql_select_db(strtolower(CustomerManager::getCurrentCustomer()->name));
+        mysql_select_db(strtolower(StoreConfigManager::getDbName()));
 
         $result = mysql_query($sql);
 

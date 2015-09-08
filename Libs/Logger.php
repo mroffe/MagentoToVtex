@@ -1,29 +1,28 @@
 <?php
 
 class Logger {
-    //TODO deveria ter um info pra fazer o log das operações com sucesso
-    public static function log($message,Exception $exeception = null,$request = null){
 
-        print_r(CustomerManager::getCurrentCustomer()->name.": ".$message."\n");
+    public static function info($message){
 
-//        if($request)
-//            print_r($request."\n");
-//
-//        if($exeception){
-//            print_r($exeception->getMessage()."\n");
-//        }
+        print_r(StoreConfigManager::getName().": ".$message."\n");
     }
 
-    public static function error($message,Exception $exeception = null,$request = null){
+    public static function alert($message,Exception $exeception, $request){
 
-        print_r(CustomerManager::getCurrentCustomer()->name.": ".$message."\n");
+        self::info($message);
 
         if($request)
             print_r($request."\n");
 
         if($exeception){
             print_r($exeception->getMessage()."\n");
-            throw $exeception;
         }
+    }
+
+    public static function error($message,Exception $exeception, $request){
+
+        self::alert($message,$exeception,$request);
+
+        throw $exeception;
     }
 }

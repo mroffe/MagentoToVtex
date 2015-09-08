@@ -21,13 +21,14 @@
         <p class="topolink" style="margin-left: 20px;">
             <a href="http://planilha.primordia.com.br/">Integrador correios</a> |
             <a href="http://planilha.primordia.com.br/sobeplanilhaindex.php">Sobe planilha</a> |
-            <a href="http://magentotovtex.primordia.com.br/sobeplanilhaindex.php">Magento to Vtex</a>
+            <a href="http://magentotovtex.primordia.com.br/">Magento to Vtex</a> |
+            <a href="http://tools.primordia.com.br/">Arquiva cupom em massa</a>
         </p>
     </div>
     <table width=400><tr><td>
         <div class="formulario"><div class="conteudo">
             <h2 style="padding-top:20px;">Magento to Vtex</h2>
-            <p>Preencha os campos abaixo com os dados necess&aacute;rios:</p>
+            <p>Preencha os campos abaixo com os dados necess&aacute;rios:</p><p><b>Passe o mouse sobre o nome do campo para maiores informações.</b></p>
 
 
             <form action="MagentoToVtex.php" enctype="multipart/form-data" id="integrador" method="post" name="integrador">
@@ -38,26 +39,37 @@
 
                     <div class="nome_campo" >Dados Magento: </div>
 
-                    <div class="nome_campo" >Nome cliente: </div>
+                    <div class="nome_campo" title="Nome do cliente sem espaços.">Nome cliente: </div>
                     <div class="campo"><input name="name" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >URL: </div>
+                    <div class="nome_campo" title="URL do cliente, será usado na url do webservice.">URL: </div>
                     <div class="campo"><input name="url" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Usuario: </div>
-                    <div class="campo"><input name="user" value="" maxlenght="60" type="text" class="forms"></div>
+                    <div class="nome_campo" title="Nome do usuário que está liberado para acesso no 'compartilhar recursos' no magento.">Usuario (recurso): </div>
+                    <div class="campo"><input name="magentouser" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Password: </div>
-                    <div class="campo"><input name="pass" value="" maxlenght="60" type="password" class="forms"></div>
+                    <div class="nome_campo" title="Senha do usuário que está liberado para acesso no 'compartilhar recursos' no magento.">Password (recurso): </div>
+                    <div class="campo"><input name="magentopass" value="" maxlenght="60" type="password" class="forms"></div>
 
-                    <div class="nome_campo" >DB host: </div>
+                    <div class="nome_campo" title="URL do banco de dados do Magento.">DB host: </div>
                     <div class="campo"><input name="dbhost" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Usuario DB: </div>
+                    <div class="nome_campo" title="URL do banco de dados do Magento.">DB name: </div>
+                    <div class="campo"><input name="dbname" value="" maxlenght="60" type="text" class="forms"></div>
+
+                    <div class="nome_campo" title="Usuário do banco de dados do Magento.">Usuario DB: </div>
                     <div class="campo"><input name="userdb" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Password DB: </div>
+                    <div class="nome_campo" title="Senha do banco de dados do Magento.">Password DB: </div>
                     <div class="campo"><input name="passdb" value="" maxlenght="60" type="password" class="forms"></div>
+
+                    <div class="nome_campo" title="Tipo de produto que será enviado.">Product Type: </div>
+                    <div class="campo">
+                        <select name="type">
+                            <option value="configurable">Configurable</option>
+                            <option value="simple">Simple</option>
+                        </select>
+                    </div>
 
                     </center>
                     <p></p>
@@ -69,22 +81,22 @@
 
                     <div class="nome_campo" >Dados Vtex: </div>
 
-                    <div class="nome_campo" >Nome da loja na vtex(account name): </div>
+                    <div class="nome_campo" title="AccountName do ambiente na vtex.">Nome da loja na vtex(account name): </div>
                     <div class="campo"><input name="accountname" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Usuário vtex: </div>
+                    <div class="nome_campo" title="Usuário de acesso ao webservice da vtex.">Usuário vtex (webservice): </div>
                     <div class="campo"><input name="vtexuser" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Senha vtex: </div>
+                    <div class="nome_campo" title="Senha de acesso ao webservice da vtex.">Senha vtex (webservice): </div>
                     <div class="campo"><input name="vtexpass" value="" maxlenght="60" type="password" class="forms"></div>
 
-                    <div class="nome_campo" >Departament vtex: </div>
+                    <div class="nome_campo" title="Id da categoria que receberá os produtos na vtex, caso seja apenas uma, repita o id no campo abaixo também.">DepartamentId vtex: </div>
                     <div class="campo"><input name="vtexdepartament" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Category vtex: </div>
+                    <div class="nome_campo" title="Id da categoria que receberá os produtos na vtex, caso seja apenas uma, repita o mesmo id do campo acima." >CategoryId vtex: </div>
                     <div class="campo"><input name="vtexcategory" value="" maxlenght="60" type="text" class="forms"></div>
 
-                    <div class="nome_campo" >Brand vtex: </div>
+                    <div class="nome_campo"  title="Id da marca que receberá os produtos na vtex.">BrandId vtex: </div>
                     <div class="campo"><input name="vtexbrand" value="" maxlenght="60" type="text" class="forms"></div>
 
                     </center>

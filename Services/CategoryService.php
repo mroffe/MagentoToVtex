@@ -26,7 +26,7 @@ class CategoryService {
                 self::$categoryCounter += 1;
 
         }catch (Exception $e){
-            Logger::log('Erro ao recuperar informacao da categoria.',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::alert('Erro ao recuperar informacao da categoria.',$e,VtexConnector::$ws->__getLastRequest());
         }
     }
 
@@ -48,7 +48,7 @@ class CategoryService {
                 null
             );
         }catch(SoapFault $e){
-            Logger::log('Erro ao recuperar informacao da categoria.',$e,MagentoConnector::$ws->__getLastRequest());
+            Logger::alert('Erro ao recuperar informacao da categoria.',$e,MagentoConnector::$ws->__getLastRequest());
         }
 
         $categoryData = new Category($categoryEssence, $parentId);
@@ -64,9 +64,10 @@ class CategoryService {
 
         try{
             $result = VtexConnector::$ws->CategoryInsertUpdate($categoryData->toVtex());
-            Logger::log("Categoria criada/atualizada: " . $result->CategoryInsertUpdateResult->Id . " - " . $result->CategoryInsertUpdateResult->Name);
+
+            Logger::info("Categoria criada/atualizada: " . $result->CategoryInsertUpdateResult->Id . " - " . $result->CategoryInsertUpdateResult->Name);
         }catch (SoapFault $e){
-            Logger::log('Erro ao inserir/atualizar categoria.',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::alert('Erro ao inserir/atualizar categoria.',$e,VtexConnector::$ws->__getLastRequest());
         }
 
         if(count($category->children) > 0)
@@ -81,7 +82,7 @@ class CategoryService {
             return ($result->CategoryGetByNameResult) ? $result : null;
 
         }catch (SoapFault $e){
-            Logger::log('Erro ao verificar se categoria existe.',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::alert('Erro ao verificar se categoria existe.',$e,VtexConnector::$ws->__getLastRequest());
         }
     }
 }

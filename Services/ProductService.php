@@ -8,12 +8,16 @@ class ProductService {
 
         foreach($productList as $product){
             $productData = self::getProductInfo($product->product_id);
-            $productEssence = new Product($productData);
+            $productEssence = Product::withData($productData);
 
             $currentProduct = self::getProductByRef($productEssence->RefId);
 
-            if($currentProduct->ProductGetByRefIdResult)
+            if($currentProduct->ProductGetByRefIdResult){
                 $productEssence->Id = $currentProduct->ProductGetByRefIdResult->Id;
+                $productEssence->DepartmentId = $currentProduct->ProductGetByRefIdResult->DepartmentId;
+                $productEssence->CategoryId = $currentProduct->ProductGetByRefIdResult->CategoryId;
+                $productEssence->BrandId = $currentProduct->ProductGetByRefIdResult->BrandId;
+            }
 
             self::createProductOnVtex($productEssence);
 
@@ -28,13 +32,14 @@ class ProductService {
 
                 $sku = self::createSKUforOrfanProduct($productEssence);
 
-                //TODO subir estoque
-                //$skuStock = self::getProductStock($productEssence->essence->product_id);
-                //self::createStockForSku($sku->Id);
+                $skuStockQty = self::getProductStock($productEssence->essence->product_id);
+
+                self::createStockForSku($sku->StockKeepingUnitInsertUpdateResult->Id, $skuStockQty);
+
+                self::removeImagesForSku($sku);
 
                 $skuImages = MagentoConnector::getImages($productEssence->essence->product_id);
 
-                //TODO Checkimages antes de criar
                 self::createImageforSku($sku, $skuImages);
 
                 self::activateSku($sku->StockKeepingUnitInsertUpdateResult->Id);
@@ -52,7 +57,7 @@ class ProductService {
 
                     $skuData = self::getProductInfo($skuId);
 
-                    $skuEssence = new Product($skuData);
+                    $skuEssence = Product::withSku($skuData);
 
                     $currentSku = self::getSkuByRefId($skuEssence->RefId);
 
@@ -61,15 +66,21 @@ class ProductService {
 
                     $sku = self::createSKUforProduct($skuEssence, $currentProduct->ProductGetByRefIdResult->Id);
 
-                    //TODO subir estoque
-                    //$skuStock = self::getProductStock($productEssence->essence->product_id);
-                    //self::createStockForSku($sku->Id);
+                    if($product->type=='configurable'){
+                        $skuStockQty = self::getProductStock($skuData->product_id);
+                    }else{
+                        $skuStockQty = self::getProductStock($productEssence->essence->product_id);
+                    }
+
+                    self::createStockForSku($sku->StockKeepingUnitInsertUpdateResult->Id, $skuStockQty);
 
                     //TODO subir especificacoes
 
-                    $skuImages = MagentoConnector::getImages($productEssence->essence->product_id);
 
-                    //TODO Checkimages antes de criar
+                    self::removeImagesForSku($sku);
+
+                    $skuImages = self::getImagesForSku($productEssence->essence->product_id);
+
                     self::createImageforSku($sku, $skuImages);
 
                     self::activateSku($sku->StockKeepingUnitInsertUpdateResult->Id);
@@ -78,10 +89,18 @@ class ProductService {
         }
     }
 
+    private static function getImagesForSku($skuId){
+        try{
+            return MagentoConnector::getImages($skuId);
+        }catch(Exception $e){
+            Logger::alert('Falha ao pegar imagens do sku.',$e,VtexConnector::$ws->__getLastRequest());
+        }
+    }
+
     private static function createImageforSku($sku,$imageList){
 
         foreach($imageList as $image){
-            $clientUrl = CustomerManager::getCurrentCustomer()->url;
+            $clientUrl = StoreConfigManager::getUrl();
             $imageUrl = "http://$clientUrl/media/catalog/product$image";
 
             $data = array(
@@ -94,11 +113,20 @@ class ProductService {
             try{
                 VtexConnector::$ws->ImageServiceInsertUpdate($data);
             }catch (Exception $e){
-                Logger::log('Falha ao inserir imagem a sku.',$e,VtexConnector::$ws->__getLastRequest());
+                Logger::alert('Falha ao inserir imagem a sku.',$e,VtexConnector::$ws->__getLastRequest());
             }
 
         }
 
+    }
+
+    private static function removeImagesForSku($sku){
+
+        try{
+            VtexConnector::$ws->ProductImageRemove(array('productId' => $sku->StockKeepingUnitInsertUpdateResult->Id));
+        }catch (Exception $e){
+            Logger::alert('Falha ao inserir imagem a sku.',$e,VtexConnector::$ws->__getLastRequest());
+        }
     }
 
     private static function getActiveVisibleProducts()
@@ -113,9 +141,13 @@ class ProductService {
                     'key' => 'status',
                     'value' => array('key' => 'eq', 'value' => '1')
                 ),
+//                array(
+//                    'key' => 'referencia',
+//                    'value' => array('key' => 'eq', 'value' => '43525')
+//                ),
                 array(
                     'key' => 'type',
-                    'value' => array('key' => 'eq', 'value' => 'configurable')
+                    'value' => array('key' => 'eq', 'value' => StoreConfigManager::getProductType())
                 )
             )
         );
@@ -123,13 +155,36 @@ class ProductService {
         try{
             return MagentoConnector::$ws->catalogProductList(MagentoConnector::getActiveSession(), $complexFilter);
         }catch(Exception $e){
-            Logger::log('Falha ao recuperar lista de produtos.',$e,MagentoConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao recuperar lista de produtos.',$e,MagentoConnector::$ws->__getLastRequest());
         }
 
     }
 
     private static function getProductInfo($productId){
 
+        //Makes sure I fetch the correct product by ID.
+        //ProductInfo returns ID or SKU with SKU having a priority
+        //There are cases where SKU and ID may conflict fetching the wrong product
+        $complexFilter = array(
+            'complex_filter' => array(
+                array(
+                    'key' => 'status',
+                    'value' => array('key' => 'eq', 'value' => '1')
+                ),
+                array(
+                    'key' => 'product_id',
+                    'value' => array('key' => 'eq', 'value' => $productId)
+                )
+            )
+        );
+
+        try{
+            $product = MagentoConnector::$ws->catalogProductList(MagentoConnector::getActiveSession(), $complexFilter);
+        }catch(Exception $e){
+            Logger::alert('Falha ao recuperar produto.',$e,MagentoConnector::$ws->__getLastRequest());
+        }
+
+        //With the product SKU it is garanteed to fetch the correct product
         $attributes = array(
             'attributes' => array(
                 'name',
@@ -155,9 +210,9 @@ class ProductService {
         );
 
         try{
-            return MagentoConnector::$ws->catalogProductInfo(MagentoConnector::getActiveSession(), $productId, null, $attributes, null);
+            return MagentoConnector::$ws->catalogProductInfo(MagentoConnector::getActiveSession(), $product[0]->sku, null, $attributes, null);
         }catch(Exception $e){
-            Logger::log('Falha ao recuperar info de produto.',$e,MagentoConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao recuperar info de produto.',$e,MagentoConnector::$ws->__getLastRequest());
         }
 
     }
@@ -165,9 +220,10 @@ class ProductService {
     private static function getProductStock($productId){
 
         try{
-            return MagentoConnector::$ws->catalogInventoryStockItemList(MagentoConnector::getActiveSession(), $productId);
+            $productStock = MagentoConnector::$ws->catalogInventoryStockItemList(MagentoConnector::getActiveSession(),array($productId));
+            return $productStock[0]->qty;
         }catch(Exception $e){
-            Logger::log('Falha ao recuperar estoque de produto.',$e,MagentoConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao recuperar estoque de produto.',$e,MagentoConnector::$ws->__getLastRequest());
         }
 
     }
@@ -175,9 +231,12 @@ class ProductService {
     private static function createProductOnVtex($product){
 
         try{
-            $result = VtexConnector::$ws->ProductInsertUpdate($product->toVtex());
+            //Add profiling
+            Logger::info("Criando/atualizando produto: " . $product->RefId);
+
+            VtexConnector::$ws->ProductInsertUpdate($product->toVtex());
         }catch(Exception $e){
-            Logger::log('Falha ao criar produto na VTEX.',$e,MagentoConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao criar produto na VTEX.',$e,MagentoConnector::$ws->__getLastRequest().'<br>');
         }
 
     }
@@ -185,38 +244,60 @@ class ProductService {
     private static function createSKUforOrfanProduct($product){
 
         try{
+            Logger::info("Criando/atualizando SKU: " . $product->RefId);
+
             $result = VtexConnector::$ws->StockKeepingUnitGetByRefId(array('refId' => $product->RefId));
             if($result->StockKeepingUnitGetByRefIdResult)
                return VtexConnector::$ws->StockKeepingUnitInsertUpdate($product->toOrfanSku($result->StockKeepingUnitGetByRefIdResult->Id));
             else
                return VtexConnector::$ws->StockKeepingUnitInsertUpdate($product->toOrfanSku());
+
         }catch(Exception $e){
-            Logger::log('Falha ao criar SKU na VTEX.',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao criar SKU na VTEX.',$e,VtexConnector::$ws->__getLastRequest());
         }
     }
 
     private static function createSKUForProduct($sku,$productId){
         try{
+            Logger::info("Criando/atualizando SKU: " . $sku->RefId);
+
             $result = VtexConnector::$ws->StockKeepingUnitGetByRefId(array('refId' => $sku->RefId));
 
             if($result->StockKeepingUnitGetByRefIdResult)
                 return VtexConnector::$ws->StockKeepingUnitInsertUpdate($sku->toSku($productId,$result->StockKeepingUnitGetByRefIdResult->Id));
             else
                 return VtexConnector::$ws->StockKeepingUnitInsertUpdate($sku->toSku($productId));
+
         }catch(Exception $e){
-            Logger::log('Falha ao criar produto na VTEX.',$e,MagentoConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao criar SKU na VTEX.',$e,MagentoConnector::$ws->__getLastRequest());
         }
     }
 
-    private static function createStockForSku($sku){
-        //TODO
+    private static function createStockForSku($sku, $qty){
+
+        $dateOfAvailability = date("Y-m-d H:i:s");
+        $dateOfAvailability = str_replace(" ", "T",$dateOfAvailability);
+
+        $data = array(
+            'wareHouseId' => "1_1",
+            'itemId' => $sku,
+            'availableQuantity' => $qty,
+            'dateOfAvailability' => $dateOfAvailability
+        );
+
+        try{
+            VtexConnector::$ws->WareHouseIStockableUpdateV3($data);
+        }catch (Exception $e){
+            Logger::alert('Falha ao inserir estoque em sku.',$e,VtexConnector::$ws->__getLastRequest());
+        }
+
     }
 
     private static function getProductByRef($ref){
         try{
             return VtexConnector::$ws->ProductGetByRefId(array('refId' => $ref));
         }catch(Exception $e){
-            Logger::log('Falha ao recuperar produto pela referencia',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao recuperar produto pela referencia',$e,VtexConnector::$ws->__getLastRequest());
         }
     }
 
@@ -224,7 +305,7 @@ class ProductService {
         try{
             return VtexConnector::$ws->StockKeepingUnitActive(array('idStockKeepingUnit' => $skuId));
         }catch(Exception $e){
-            Logger::log('Falha ao ativar o sku',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::info('Falha ao ativar o sku.');
         }
     }
 
@@ -232,7 +313,7 @@ class ProductService {
         try{
             return VtexConnector::$ws->StockKeepingUnitGetByRefId(array('refId' => $ref));
         }catch(Exception $e){
-            Logger::log('Falha ao recuperar sku pela referencia',$e,VtexConnector::$ws->__getLastRequest());
+            Logger::alert('Falha ao recuperar sku pela referencia',$e,VtexConnector::$ws->__getLastRequest());
         }
     }
 }

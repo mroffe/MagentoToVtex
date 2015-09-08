@@ -4,8 +4,11 @@ class BrandService {
 
     public static function run(){
 
-        $brand = VtexConnector::$ws->BrandInsertUpdate((new Brand(CustomerManager::getCurrentCustomer()->name))->toVtex());
+        //TODO verificar se já existe
 
+        $brand = VtexConnector::$ws->BrandInsertUpdate((new Brand(StoreConfigManager::getName()))->toVtex());
+
+        //TODO definir no storeconfig
         BrandManager::setCurrentBrand($brand);
 
     }
