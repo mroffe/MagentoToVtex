@@ -18,7 +18,7 @@ class MagentoConnector {
 
     public static function connect(){
         try{
-            MagentoConnector::$ws = new SoapClient('http://'.StoreConfigManager::getUrl().'/api/v2_soap/?wsdl',array(
+            MagentoConnector::$ws = new SoapClient('https://'.StoreConfigManager::getUrl().'/api/v2_soap/?wsdl',array(
                 'trace' => 1,
                 'exception' => 0
             ));
@@ -77,6 +77,52 @@ WHERE s.parent_id = $id";
 
         while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
             $skuList[] = $row['child_id'];
+        }
+
+        mysql_free_result($result);
+
+        return $skuList;
+
+    }
+
+    public static function getSkusToCount($sku){
+
+        $sql = "SELECT * FROM `catalog_product_relation` WHERE `parent_id` = $sku";
+
+        $con=mysql_connect(StoreConfigManager::getDbHost(),StoreConfigManager::getDbUser(),StoreConfigManager::getDbPass()) or
+            die("Could not connect: " . mysql_error());
+
+        mysql_select_db(strtolower(StoreConfigManager::getDbName()));
+
+        $result = mysql_query($sql);
+
+        $skuList = array();
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $skuList[] = $row['value'];
+        }
+
+        mysql_free_result($result);
+
+        return $skuList;
+
+    }
+
+    public static function getAttributeValue($optionId){
+
+        $sql = "SELECT `value` FROM `eav_attribute_option_value` WHERE `option_id` = $optionId";
+
+        $con=mysql_connect(StoreConfigManager::getDbHost(),StoreConfigManager::getDbUser(),StoreConfigManager::getDbPass()) or
+            die("Could not connect: " . mysql_error());
+
+        mysql_select_db(strtolower(StoreConfigManager::getDbName()));
+
+        $result = mysql_query($sql);
+
+        $skuList = array();
+
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $skuList[] = $row['value'];
         }
 
         mysql_free_result($result);

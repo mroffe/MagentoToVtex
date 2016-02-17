@@ -172,7 +172,7 @@ class Product {
             );
     }
 
-    public function toOrfanSku($id = null){
+    public function toOrfanSku($productId, $id = null){
         if($id){
             return array_merge_recursive(
                 $this->getListPrice(),
@@ -182,52 +182,8 @@ class Product {
                         'Height' => 1,
                         'Width' => 1,
                         'Length' => 1,
-                        'WeightKg' => $this->essence->weight*1000,
-                        'CubicWeight' => $this->essence->weight*1000,
-                        'IsKit' => false,
-                        'RefId' => $this->RefId,
-                        'IsActive' => true,
-                        'ModalId' => 1,
-                        'ProductId' => $this->Id
-                    )
-                )
-            );
-        }
-        else{
-            return array_merge_recursive(
-                $this->getListPrice(),
-                array(
-                    'stockKeepingUnitVO' => array(
-                        'Id' => $id,
-                        'Name' => $this->Name,
-                        'Height' => 1,
-                        'Width' => 1,
-                        'Length' => 1,
-                        'WeightKg' => $this->essence->weight*1000,
-                        'CubicWeight' => $this->essence->weight*1000,
-                        'IsKit' => false,
-                        'RefId' => $this->essence->sku,
-                        'IsActive' => true,
-                        'ModalId' => 1,
-                        'ProductId' => $this->Id
-                    )
-                )
-            );
-        }
-    }
-
-    public function toSku($productId, $id = null){
-        if($id){
-            return array_merge_recursive(
-                $this->getListPrice(),
-                array(
-                    'stockKeepingUnitVO' => array(
-                        'Name' => $this->Name,
-                        'Height' => 1,
-                        'Width' => 1,
-                        'Length' => 1,
-                        'WeightKg' => $this->essence->weight*1000,
-                        'CubicWeight' => $this->essence->weight*1000,
+                        'WeightKg' => $this->essence->weight,
+                        'CubicWeight' => $this->essence->weight,
                         'IsKit' => false,
                         'RefId' => $this->RefId,
                         'IsActive' => true,
@@ -247,8 +203,52 @@ class Product {
                         'Height' => 1,
                         'Width' => 1,
                         'Length' => 1,
-                        'WeightKg' => $this->essence->weight*1000,
-                        'CubicWeight' => $this->essence->weight*1000,
+                        'WeightKg' => $this->essence->weight,
+                        'CubicWeight' => $this->essence->weight,
+                        'IsKit' => false,
+                        'RefId' => $this->essence->sku,
+                        'IsActive' => true,
+                        'ModalId' => 1,
+                        'ProductId' => $productId
+                    )
+                )
+            );
+        }
+    }
+
+    public function toSku($productId, $id = null){
+        if($id){
+            return array_merge_recursive(
+                $this->getListPrice(),
+                array(
+                    'stockKeepingUnitVO' => array(
+                        'Name' => $this->Name,
+                        'Height' => 1,
+                        'Width' => 1,
+                        'Length' => 1,
+                        'WeightKg' => $this->essence->weight,
+                        'CubicWeight' => $this->essence->weight,
+                        'IsKit' => false,
+                        'RefId' => $this->RefId,
+                        'IsActive' => true,
+                        'ModalId' => 1,
+                        'ProductId' => $productId
+                    )
+                )
+            );
+        }
+        else{
+            return array_merge_recursive(
+                $this->getListPrice(),
+                array(
+                    'stockKeepingUnitVO' => array(
+                        'Id' => $id,
+                        'Name' => $this->Name,
+                        'Height' => 1,
+                        'Width' => 1,
+                        'Length' => 1,
+                        'WeightKg' => $this->essence->weight,
+                        'CubicWeight' => $this->essence->weight,
                         'IsKit' => false,
                         'RefId' => $this->essence->sku,
                         'IsActive' => true,
