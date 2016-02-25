@@ -34,20 +34,13 @@ class ProductService {
 
         foreach($productList as $product){
 
-//            Verifica se o produto tem mais skus do que o permitido.
-
-//            $total = self::getSkusForCount($product->product_id);
-//            if(count($total)>49){
-//                continue;
-//            }
-
             $i++;
-            if($i<4){
+            if($i<0){
                 continue;
             }
 
-
-            //if (in_array($product->sku, $textAr)){
+            if($_POST['definidos']=="true"){
+                if (in_array($product->sku, $textAr)){
                 //$i++;
 
                 $ii++;
@@ -62,22 +55,14 @@ class ProductService {
                 sleep(1);
                 $productData = self::getProductInfo($product->product_id);
 
-                // Verifica se existe o produto em questão, e caso exista sai do laço.
-
-                /* $produtoexiste = VtexConnector::$ws->ProductGetByRefId(array('refId' => $product->sku));
-
-                if($product->sku == $produtoexiste->ProductGetByRefIdResult->RefId){
-                     continue;
-                }*/
-
                 $productEssence = Product::withData($productData);
 
                 $currentProduct = self::getProductByRef($product->sku);
 
                 if($currentProduct->ProductGetByRefIdResult){
                     $productEssence->Id = $currentProduct->ProductGetByRefIdResult->Id;
-                    $productEssence->DepartmentId = $_POST['vtexdepartament'];
-                    $productEssence->CategoryId = $_POST['vtexcategory'];
+                    $productEssence->DepartmentId = $currentProduct->ProductGetByRefIdResult->DepartmentId;
+                    $productEssence->CategoryId = $currentProduct->ProductGetByRefIdResult->CategoryId;
                     $productEssence->BrandId = $currentProduct->ProductGetByRefIdResult->BrandId;
                 }
 
@@ -90,7 +75,7 @@ class ProductService {
                     continue;
                 }
 
-                //self::createProductOnVtex($productEssence);
+                self::createProductOnVtex($productEssence);
 
                 //continue;
 
@@ -116,13 +101,6 @@ class ProductService {
 
                     $skuImages = MagentoConnector::getImages($productEssence->essence->product_id);
 
-                    //Trata o tramanho das imagens
-                    $dimensoes[] = getimagesize("http://".$_POST['url']."/media/catalog/product".$skuImages[0]);
-
-                    if(($dimensoes[0][0]*$dimensoes[0][1])>1023000){
-                        continue;
-                    }
-
                     self::createImageforSku($sku, $skuImages);
 
                     self::activateSku($sku->StockKeepingUnitInsertUpdateResult->Id);
@@ -146,31 +124,29 @@ class ProductService {
 
                             $currentSku = self::getSkuByRefId($skuEssence->RefId);
 
-                            if(!$currentSku->StockKeepingUnitGetByRefIdResult){continue;}
-
                             if($currentSku->StockKeepingUnitGetByRefIdResult)
                                 $skuEssence->Id = $currentSku->StockKeepingUnitGetByRefIdResult->Id;
 
                             sleep(1);
                             $sku = self::createSKUforProduct($skuEssence, $currentProduct->ProductGetByRefIdResult->Id);
 
-//                            if($product->type=='configurable'){
-//                                $skuStockQty = self::getProductStock($skuData->product_id);
-//                            }else{
-//                                $skuStockQty = self::getProductStock($productEssence->essence->product_id);
-//                            }
+                            if($product->type=='configurable'){
+                                $skuStockQty = self::getProductStock($skuData->product_id);
+                            }else{
+                                $skuStockQty = self::getProductStock($productEssence->essence->product_id);
+                            }
 
-                            //self::createStockForSku($sku->StockKeepingUnitInsertUpdateResult->Id, $skuStockQty);
+                            self::createStockForSku($sku->StockKeepingUnitInsertUpdateResult->Id, $skuStockQty);
 
                             // insere especificacao
 
                             //Tamanho
-                            $especificationValue_1 = MagentoConnector::getAttributeValue($skuData->additional_attributes[3]->value);
-                            self::insertEspecification($currentSku->StockKeepingUnitGetByRefIdResult->Id, 'Tamanho', $especificationValue_1);
+                            //$especificationValue_1 = MagentoConnector::getAttributeValue($skuData->additional_attributes[3]->value);
+                            //self::insertEspecification($currentSku->StockKeepingUnitGetByRefIdResult->Id, 'Tamanho', $especificationValue_1);
 
                             //Cor
-                            $especificationValue_2 = MagentoConnector::getAttributeValue($skuData->additional_attributes[2]->value);
-                            self::insertEspecification($currentSku->StockKeepingUnitGetByRefIdResult->Id, 'Cor', $especificationValue_2);
+                            //$especificationValue_2 = MagentoConnector::getAttributeValue($skuData->additional_attributes[2]->value);
+                            //self::insertEspecification($currentSku->StockKeepingUnitGetByRefIdResult->Id, 'Cor', $especificationValue_2);
 
                             //TODO subir especificacoes
 
@@ -186,10 +162,135 @@ class ProductService {
                         }
                     }
                 }
-            //}
+            }
+            }else{
+
+
+                    $ii++;
+                    if($p<0){
+                        $p++;
+                        continue;
+                    }
+
+                    echo "<br><font color=blue>Produto ".$i." - Total de produtos: ".$totalProd." - " .date('H:m:s')."</font><br>";
+                    self::doLog("Produto ".$i." - ".$product->sku." - Total de produtos: ".$totalProd." - ".$p." de ".count($textAr));
+                    $p++;
+                    sleep(1);
+                    $productData = self::getProductInfo($product->product_id);
+
+                    $productEssence = Product::withData($productData);
+
+                    $currentProduct = self::getProductByRef($product->sku);
+
+                    if($currentProduct->ProductGetByRefIdResult){
+                        $productEssence->Id = $currentProduct->ProductGetByRefIdResult->Id;
+                        $productEssence->DepartmentId = $currentProduct->ProductGetByRefIdResult->DepartmentId;
+                        $productEssence->CategoryId = $currentProduct->ProductGetByRefIdResult->CategoryId;
+                        $productEssence->BrandId = $currentProduct->ProductGetByRefIdResult->BrandId;
+                    }
+
+                    $skuList = MagentoConnector::getSKUsForProduct($product->product_id);
+
+                    // Limita a quantidade de skus por produto
+                    if(count($skuList)>49){
+                        echo "<p color=red>Referencia: ".$product->sku." tem mais de 50 skus. Não sera enviado.</p>";
+                        self::doLog('Produto com mais de 50 skus, nao sera enviado. '.$product->sku);
+                        continue;
+                    }
+
+                    self::createProductOnVtex($productEssence);
+
+                    //continue;
+
+                    //Remove as imagens do produto
+                    //self::removeImagesForSku($currentProduct->ProductGetByRefIdResult->Id);
+
+                    if($productEssence->isOrfan()){
+
+                        $productEssence->Id = null;
+
+                        $currentSku = self::getSkuByRefId($productEssence->RefId);
+
+                        if($currentSku->StockKeepingUnitGetByRefIdResult)
+                            $productEssence->Id = $currentSku->StockKeepingUnitGetByRefIdResult->Id;
+
+                        $sku = self::createSKUforOrfanProduct($productEssence,$currentProduct->ProductGetByRefIdResult->Id);
+
+                        $skuStockQty = self::getProductStock($productEssence->essence->product_id);
+
+                        self::createStockForSku($sku->StockKeepingUnitInsertUpdateResult->Id, $skuStockQty);
+
+                        self::removeImagesForSku($sku);
+
+                        $skuImages = MagentoConnector::getImages($productEssence->essence->product_id);
+
+                        self::createImageforSku($sku, $skuImages);
+
+                        self::activateSku($sku->StockKeepingUnitInsertUpdateResult->Id);
+                    }
+                    else{
+
+                        if($_POST['produto-ou-sku'] == "produto-sku"){
+                            foreach($skuList as $skuId){
+
+                                $skuData = null;
+                                $skuEssence = null;
+                                $currentSku = null;
+                                $sku = null;
+                                $skuImages = null;
+
+                                $skuData = self::getProductInfo($skuId);
+
+                                if(!$skuData){continue;}
+
+                                $skuEssence = Product::withSku($skuData);
+
+                                $currentSku = self::getSkuByRefId($skuEssence->RefId);
+
+                                if($currentSku->StockKeepingUnitGetByRefIdResult)
+                                    $skuEssence->Id = $currentSku->StockKeepingUnitGetByRefIdResult->Id;
+
+                                sleep(1);
+                                $sku = self::createSKUforProduct($skuEssence, $currentProduct->ProductGetByRefIdResult->Id);
+
+                                if($product->type=='configurable'){
+                                    $skuStockQty = self::getProductStock($skuData->product_id);
+                                }else{
+                                    $skuStockQty = self::getProductStock($productEssence->essence->product_id);
+                                }
+
+                                self::createStockForSku($sku->StockKeepingUnitInsertUpdateResult->Id, $skuStockQty);
+
+                                // insere especificacao
+
+                                //Tamanho
+                                //$especificationValue_1 = MagentoConnector::getAttributeValue($skuData->additional_attributes[3]->value);
+                                //self::insertEspecification($currentSku->StockKeepingUnitGetByRefIdResult->Id, 'Tamanho', $especificationValue_1);
+
+                                //Cor
+                                //$especificationValue_2 = MagentoConnector::getAttributeValue($skuData->additional_attributes[2]->value);
+                                //self::insertEspecification($currentSku->StockKeepingUnitGetByRefIdResult->Id, 'Cor', $especificationValue_2);
+
+                                //TODO subir especificacoes
+
+                                $images = MagentoConnector::$ws->catalogProductAttributeMediaList(MagentoConnector::getActiveSession(), $product->sku, '1');
+
+                                self::removeImagesForSku($currentSku->StockKeepingUnitGetByRefIdResult->Id);
+
+                                $skuImages = self::getImagesForSku($productEssence->essence->product_id);
+
+                                self::createImageforSku($sku, $skuImages);
+
+                                self::activateSku($currentSku->StockKeepingUnitGetByRefIdResult->Id);
+                            }
+                        }
+                    }
+                }
+
         }
 
         echo "<font color=red><b>Inicio do processo: ".$begin."<br>Fim do processo: ". date('H:m:s') ."</b></font><br><br>";
+        self::doLog("Process completed.");
     }
 
     private static function getImagesForSku($skuId){
@@ -215,11 +316,11 @@ class ProductService {
             $thumb = new Imagick();
             $thumb->readImage($imageUrl);
             $thumb->resizeImage(600,800,Imagick::FILTER_LANCZOS,1);
-            $thumb->writeImage('imagem3.jpg');
+            $thumb->writeImage('imagem.jpg');
             $thumb->clear();
             $thumb->destroy();
 
-            $imageUrl = 'http://bfgoals.vtex.com/integrador/lafort/imagem.jpg';
+            $imageUrl = $_SERVER['HTTP_REFERER'].'imagem.jpg';
 
             $img = preg_replace('/[^a-z0-9 -]+/', '', $sku->StockKeepingUnitInsertUpdateResult->Name);
             $img = str_replace(' ', '-', $img);

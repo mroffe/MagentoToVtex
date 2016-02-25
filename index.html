@@ -1,0 +1,409 @@
+<style xmlns="http://www.w3.org/1999/html">
+	/*custom font*/
+@import url(http://fonts.googleapis.com/css?family=Montserrat);
+
+    ::-webkit-scrollbar
+    {
+        width: 0px;
+    }
+    ::-webkit-scrollbar-track-piece
+    {
+        background-color: transparent;
+        -webkit-border-radius: 6px;
+    }
+
+/*basic reset*/
+* {margin: 0; padding: 0;}
+
+html {
+	height: 100%;
+	/*Image only BG fallback*/
+	background: url('gs.png');
+	/*background = gradient + image pattern combo*/
+	background: 
+		linear-gradient(rgba(196, 102, 0, 0.2), rgba(155, 89, 182, 0.2)), 
+		url('gs.png');
+}
+
+body {
+	font-family: montserrat, arial, verdana;
+}
+/*form styles*/
+#msform {
+	width: 400px;
+	margin: 50px auto;
+	text-align: center;
+	position: relative;
+}
+#msform fieldset {
+	background: white;
+	border: 0 none;
+	border-radius: 3px;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+	padding: 20px 30px;
+	
+	box-sizing: border-box;
+	width: 80%;
+	margin: 0 10%;
+	
+	/*stacking fieldsets above each other*/
+	position: absolute;
+}
+/*Hide all except first fieldset*/
+#msform fieldset:not(:first-of-type) {
+	display: none;
+}
+/*inputs*/
+#msform input, #msform textarea {
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: montserrat;
+	color: #2C3E50;
+	font-size: 13px;
+}
+/*buttons*/
+#msform .action-button {
+	width: 100px;
+	background: #27AE60;
+	font-weight: bold;
+	color: white;
+	border: 0 none;
+	border-radius: 1px;
+	cursor: pointer;
+	padding: 10px 5px;
+	margin: 10px 5px;
+}
+#msform .action-button:hover, #msform .action-button:focus {
+	box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+/*headings*/
+.fs-title {
+	font-size: 15px;
+	text-transform: uppercase;
+	color: #2C3E50;
+	margin-bottom: 10px;
+}
+.fs-subtitle {
+	font-weight: normal;
+	font-size: 13px;
+	color: #666;
+	margin-bottom: 20px;
+}
+/*progressbar*/
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+	/*CSS counters to number the steps*/
+	counter-reset: step;
+}
+#progressbar li {
+	list-style-type: none;
+	color: white;
+	text-transform: uppercase;
+	font-size: 9px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+#progressbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	font-size: 10px;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+#progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1; /*put it behind the numbers*/
+}
+#progressbar li:first-child:after {
+	/*connector not needed before the first step*/
+	content: none; 
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before,  #progressbar li.active:after{
+	background: #27AE60;
+	color: white;
+}
+
+
+</style>
+	
+<!-- multistep form -->
+<form id="msform">
+	<!-- progressbar -->
+	<ul id="progressbar">
+		<li class="active">Magento account</li>
+		<li>Vtex account</li>
+		<li>Send products</li>
+	</ul>
+	<!-- fieldsets -->
+	<fieldset>
+		<h2 class="fs-title">Magento info</h2>
+		<h3 class="fs-subtitle">This is step 1</h3>
+        <input type="text" name="name" id="name" placeholder="Store Name" />
+		<input type="text" name="url" id="url" placeholder="Store url" />
+		<input type="text" name="magentouser" id="magentouser" placeholder="User" />
+		<input type="password" name="magentopass" id="magentopass" placeholder="Password" />
+        <input type="text" name="dbhost" id="dbhost" placeholder="dbhost" />
+        <input type="text" name="dbname" id="dbname" placeholder="dbname" />
+        <input type="text" name="userdb" id="userdb" placeholder="userdb" />
+        <input type="password" name="passdb" id="passdb" placeholder="passdb" />
+        <p class="todo" style="font-size: 10px; cursor: pointer; position:absolute;">To do</p>
+        <p class="hidetodo" style="font-size: 10px; cursor: pointer; position:absolute;">Hide To do</p>
+        <select name="todoitem" id="todoitem">
+            <option value="productservice">Send products</option>
+            <option value="attributelist">Attribute list</option>
+        </select>
+		<input type="button" name="next" class="next action-button" value="Next" />
+        <p class="label help" style="font-size: 10px;"><a href="https://github.com/vtex/MagentoToVtex" target="_blank">More info</a></p>
+    </fieldset>
+	<fieldset>
+		<h2 class="fs-title">Vtex account info</h2>
+		<h3 class="fs-subtitle">This is step 2</h3>
+		<input type="text" name="accountname" id="accountname" placeholder="Account name" />
+		<input type="text" name="vtexuser" id="vtexuser" placeholder="Vtex webservice user" />
+		<input type="password" name="vtexpass" id="vtexpass" placeholder="Vtex webservice pass" />
+		<input type="text" name="vtexdepartament" id="vtexdepartament" placeholder="Department Id" />
+		<input type="text" name="vtexcategory" id="vtexcategory" placeholder="Category Id" />
+		<input type="text" name="vtexbrand" id="vtexbrand" placeholder="Brand Id" />
+		<input type="button" name="previous" class="previous action-button" value="Previous" />
+		<input type="button" name="next" class="next action-button" value="Next" />
+        <p class="label help" style="font-size: 10px;"><a href="https://github.com/vtex/MagentoToVtex" target="_blank">More info</a></p>
+	</fieldset>
+	<fieldset>
+		<h2 class="fs-title">Send products</h2>
+		<h3 class="fs-subtitle">This is step 3<br> Click on the icon to choose products or click submit to send all. </h3>
+
+        <p class="label type" style="font-size: 10px; display: none;">Product type:</p>
+        <select name="type" id="type" style="display: none;">
+            <option value="configurable">Configurable</option>
+            <!--<option value="simple">Simple</option>-->
+        </select>
+        <img id="choose" src="choose.png" style="cursor: pointer;">
+
+        <div id="ok"> <img src="ok.png"> <p style="font-size: 10px; cursor: pointer;"></br>Request sent!</p></div>
+
+        <div class="choose-products" style="position: absolute;top: 0px;margin-left: -240px;"><p class="choose-itens"><textarea name="referencias" id="referencias" rows="20" cols="20" placeholder="put here the skus, one per line"></textarea></textarea></p></div>
+
+        <p>&nbsp;</p>
+        <p style="font-size: 10px;" ><progress id="progress" value="0"></progress>
+        <!--<button id="button">Start uploading</button>-->
+        <span id="display"></span><p/>
+        <p class="log" style="font-size: 10px; cursor: pointer;"></br>View log</p>
+        <p class="hidelog" style="font-size: 10px; cursor: pointer;"></br>Hide log</p>
+        <iframe id="frame" name="frame" src="/integration.txt" width="400" height="400" style="border-width:0;position: absolute;margin-left: 320px;top: 0px;"></iframe>
+		<input type="button" name="previous" class="previous action-button" value="Previous" />
+		<input type="submit" id="button" name="submit" class="submit action-button" value="Submit" />
+        <p class="label help" style="font-size: 10px;"><a href="https://github.com/vtex/MagentoToVtex" target="_blank">More info</a></p>
+    </fieldset>
+</form>
+
+<!-- jQuery -->
+<script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+<!-- jQuery easing plugin -->
+<script src="jquery.easing.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	//jQuery time
+var current_fs, next_fs, previous_fs; //fieldsets
+var left, opacity, scale; //fieldset properties which we will animate
+var animating; //flag to prevent quick multi-click glitches
+
+$(".next").click(function(){
+	if(animating) return false;
+	animating = true;
+	
+	current_fs = $(this).parent();
+	next_fs = $(this).parent().next();
+	
+	//activate next step on progressbar using the index of next_fs
+	$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+	
+	//show the next fieldset
+	next_fs.show(); 
+	//hide the current fieldset with style
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			//as the opacity of current_fs reduces to 0 - stored in "now"
+			//1. scale current_fs down to 80%
+			scale = 1 - (1 - now) * 0.2;
+			//2. bring next_fs from the right(50%)
+			left = (now * 50)+"%";
+			//3. increase opacity of next_fs to 1 as it moves in
+			opacity = 1 - now;
+			current_fs.css({'transform': 'scale('+scale+')'});
+			next_fs.css({'left': left, 'opacity': opacity});
+		}, 
+		duration: 800, 
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		}, 
+		//this comes from the custom easing plugin
+		easing: 'easeInOutBack'
+	});
+});
+
+$(".previous").click(function(){
+	if(animating) return false;
+	animating = true;
+	
+	current_fs = $(this).parent();
+	previous_fs = $(this).parent().prev();
+	
+	//de-activate current step on progressbar
+	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+	
+	//show the previous fieldset
+	previous_fs.show(); 
+	//hide the current fieldset with style
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			//as the opacity of current_fs reduces to 0 - stored in "now"
+			//1. scale previous_fs from 80% to 100%
+			scale = 0.8 + (1 - now) * 0.2;
+			//2. take current_fs to the right(50%) - from 0%
+			left = ((1-now) * 50)+"%";
+			//3. increase opacity of previous_fs to 1 as it moves in
+			opacity = 1 - now;
+			current_fs.css({'left': left});
+			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+		}, 
+		duration: 800, 
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		}, 
+		//this comes from the custom easing plugin
+		easing: 'easeInOutBack'
+	});
+});
+
+$(".submit").click(function(){
+    $("#ok").show();
+    $("#choose").hide();
+    $(".submit").hide();
+	return false;
+});
+
+$("#frame").hide();
+$(".hidelog").hide();
+$("#ok").hide();
+$(".hidetodo").hide();
+$("#todoitem").hide();
+$(".choose-products").hide();
+
+$("#choose").click(function(){
+    $(".choose-products").show();
+});
+
+$(".todo").click(function(){
+    $(".todo").hide();
+    $(".hidetodo").show();
+    $("#todoitem").show();
+});
+
+$(".hidetodo").click(function(){
+    $(".todo").show();
+    $("#todoitem").hide();
+    $(".hidetodo").hide();
+});
+
+$(".log").click(function(){
+    window.open(window.location.href+'/integration.txt',target="frame");
+    $("#frame").show();
+    $(".log").hide();
+    $(".hidelog").show();
+});
+$(".hidelog").click(function(){
+    window.open(window.location.href+'/integration.txt',target="frame");
+    $("#frame").hide();
+    $(".log").show();
+    $(".hidelog").hide();
+});
+
+// ------------- progress bar
+
+    var progressBar = document.getElementById("progress"),
+            loadBtn = document.getElementById("button"),
+            display = document.getElementById("display");
+
+    function upload(data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", window.location.href+"MagentoToVtex.php", true);
+        if (xhr.upload) {
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    progressBar.max = e.total;
+                    progressBar.value = e.loaded;
+                    display.innerText = Math.floor((e.loaded / e.total) * 100) + '%';
+                }
+            }
+            xhr.upload.onloadstart = function(e) {
+                progressBar.value = 0;
+                display.innerText = '0%';
+            }
+            xhr.upload.onloadend = function(e) {
+                progressBar.value = e.loaded;
+                loadBtn.disabled = false;
+                loadBtn.innerHTML = 'Start uploading';
+            }
+        }
+        xhr.send(data);
+    }
+
+    function buildFormData() {
+        var fd = new FormData();
+
+        fd.append('data[do]', document.getElementById("todoitem").value);
+        fd.append('data[name]', document.getElementById("name").value);
+        fd.append('data[url]', document.getElementById("url").value);
+        fd.append('data[magentouser]', document.getElementById("magentouser").value);
+        fd.append('data[magentopass]', document.getElementById("magentopass").value);
+        fd.append('data[dbhost]', document.getElementById("dbhost").value);
+        fd.append('data[dbname]', document.getElementById("dbname").value);
+        fd.append('data[userdb]', document.getElementById("userdb").value);
+        fd.append('data[passdb]', document.getElementById("passdb").value);
+        fd.append('data[referencias]', document.getElementById("referencias").value);
+        if(document.getElementById("referencias").value!=""){
+            fd.append('data[definidos]', 'true');
+        }else{
+            fd.append('data[definidos]', 'false');
+        }
+        fd.append('data[type]', document.getElementById("type").value);
+        fd.append('data[accountname]', document.getElementById("accountname").value);
+        fd.append('data[vtexuser]', document.getElementById("vtexuser").value);
+        fd.append('data[vtexpass]', document.getElementById("vtexpass").value);
+        fd.append('data[vtexdepartament]', document.getElementById("vtexdepartament").value);
+        fd.append('data[vtexcategory]', document.getElementById("vtexcategory").value);
+        fd.append('data[vtexbrand]', document.getElementById("vtexbrand").value);
+
+        return fd;
+    }
+
+    loadBtn.addEventListener("click", function(e) {
+        this.disabled = true;
+        this.innerHTML = "Uploading...";
+        upload(buildFormData());
+    });
+
+
+</script>
