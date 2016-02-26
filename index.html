@@ -1,4 +1,4 @@
-<style xmlns="http://www.w3.org/1999/html">
+<style xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 	/*custom font*/
 @import url(http://fonts.googleapis.com/css?family=Montserrat);
 
@@ -168,10 +168,11 @@ body {
         <input type="password" name="passdb" id="passdb" placeholder="passdb" />
         <p class="todo" style="font-size: 10px; cursor: pointer; position:absolute;">To do</p>
         <p class="hidetodo" style="font-size: 10px; cursor: pointer; position:absolute;">Hide To do</p>
-        <select name="todoitem" id="todoitem">
+        <select name="todoitem" id="todoitem" onchange="getComboA(this)">
             <option value="productservice">Send products</option>
             <option value="attributelist">Attribute list</option>
-        </select>
+        </select></br></br>
+        <input type="text" name="attributeid" id="attributeid" placeholder="Magento Attribute Id" />
 		<input type="button" name="next" class="next action-button" value="Next" />
         <p class="label help" style="font-size: 10px;"><a href="https://github.com/vtex/MagentoToVtex" target="_blank">More info</a></p>
     </fieldset>
@@ -310,6 +311,7 @@ $("#ok").hide();
 $(".hidetodo").hide();
 $("#todoitem").hide();
 $(".choose-products").hide();
+$("#attributeid").hide();
 
 $("#choose").click(function(){
     $(".choose-products").show();
@@ -325,6 +327,7 @@ $(".hidetodo").click(function(){
     $(".todo").show();
     $("#todoitem").hide();
     $(".hidetodo").hide();
+    $("#attributeid").hide();
 });
 
 $(".log").click(function(){
@@ -395,6 +398,7 @@ $(".hidelog").click(function(){
         fd.append('data[vtexdepartament]', document.getElementById("vtexdepartament").value);
         fd.append('data[vtexcategory]', document.getElementById("vtexcategory").value);
         fd.append('data[vtexbrand]', document.getElementById("vtexbrand").value);
+        fd.append('data[attributeid]', document.getElementById("attributeid").value);
 
         return fd;
     }
@@ -404,6 +408,15 @@ $(".hidelog").click(function(){
         this.innerHTML = "Uploading...";
         upload(buildFormData());
     });
+
+    function getComboA(sel) {
+        var value = sel.value;
+        if(value=="attributelist"){
+            $("#attributeid").show();
+        }else{
+            $("#attributeid").hide();
+        }
+    }
 
 
 </script>

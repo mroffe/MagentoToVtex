@@ -40,6 +40,7 @@ $_POST['vtexpass'] = $_POST['data']['vtexpass'];
 $_POST['vtexdepartament'] = $_POST['data']['vtexdepartament'];
 $_POST['vtexcategory'] = $_POST['data']['vtexcategory'];
 $_POST['vtexbrand'] = $_POST['data']['vtexbrand'];
+$_POST['attributeid'] = $_POST['data']['attributeid'];
 $do = $_POST['data']['do'];
 
 

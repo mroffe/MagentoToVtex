@@ -14,7 +14,7 @@ class AttributeList
 
         //GET PRODUCT ATTRIBUTE OPTION VALUES
 
-        $attributeId = '137'; // 136 tam 137 cor
+        $attributeId = $_POST['attributeid']; // 136 tam 137 cor
 
         $attributes = self::getAttributeValues($attributeId);
 
