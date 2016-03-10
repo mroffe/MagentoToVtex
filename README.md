@@ -43,6 +43,9 @@ Fill the form with all data needed.
 <b>Pass DB</b>
 - Needed to MagentoConnector Class, is the password used to log in the magento's database. Ex: mypass123
 
+<b>To Do</b>
+- Defines the target, send products or list the magento's attribute ( like color or size).
+
 #Explaining the fields from second screen
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s15.postimg.org/ssbhk6q1n/image.png></a>
