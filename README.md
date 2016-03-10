@@ -12,7 +12,7 @@ MagentoToVtex is a simple project to get catalog from magento and bring to vtex 
 #The beta repo needs
 - <a href=http://php.net/downloads.php>PHP 5</a>
 - <a href=https://www.mysql.com/downloads/>MYSQL</a>
-- PHP imagick: sudo apt-get install php5-imagick
+- <a href=http://php.net/manual/pt_BR/book.imagick.php>PHP imagick:</a> sudo apt-get install php5-imagick
 
 #Using MagentoToVtex Beta
 
