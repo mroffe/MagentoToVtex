@@ -24,7 +24,7 @@ sudo apt-get install php5-imagick
 
 Visit http://magentotovtex.primordia.com.br/ and just fill the form.
 
-#Explaining the fields from first screen
+#Explaining fields from first screen
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s29.postimg.org/dxf30me1j/image.png></a>
 
@@ -55,7 +55,7 @@ Visit http://magentotovtex.primordia.com.br/ and just fill the form.
 <b>To Do</b>
 - Defines the target, send products or list the magento's attribute ( like color or size).
 
-#Explaining the fields from second screen
+#Explaining fields from second screen
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s15.postimg.org/ssbhk6q1n/image.png></a>
 
@@ -79,7 +79,7 @@ Visit http://magentotovtex.primordia.com.br/ and just fill the form.
 <b>Brand ID</b>
 - Needed to ProductService Class, is the id from vtex's brand section. Ex: 2000000
 
-#Explaining the fields from third screen
+#Explaining fields from third screen
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s21.postimg.org/yzc6284gn/image.png></a>
 
