@@ -5,9 +5,14 @@ http://magentotovtex.primordia.com.br/
 
 MagentoToVtex is a simple project to get catalog from magento and bring to vtex store. Have two branchies in this repo, Master and IncludinSmartFunctions, master is the base and the other is a beta.
 
-#This repo needs
+#This base repo needs
 - <a href=http://php.net/downloads.php>PHP 5</a>
 - <a href=https://www.mysql.com/downloads/>MYSQL</a>
+
+#The beta repo needs
+- <a href=http://php.net/downloads.php>PHP 5</a>
+- <a href=https://www.mysql.com/downloads/>MYSQL</a>
+- PHP imagick: sudo apt-get install php5-imagick
 
 #Using MagentoToVtex Beta
 
