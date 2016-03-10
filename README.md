@@ -1,24 +1,28 @@
-# MagentoToVtex
+# <a href=http://magentotovtex.primordia.com.br/>MagentoToVtex</a>
 Vtex integration for Magento stores.
+
+<a href=http://magentotovtex.primordia.com.br/><img src=http://s29.postimg.org/dxf30me1j/image.png width=200></a>
 
 http://magentotovtex.primordia.com.br/
 
-MagentoToVtex is a simple project to get catalog from magento and bring to vtex store. Have two branchies in this repo, Master and IncludinSmartFunctions, master is the base and the other is a beta.
+MagentoToVtex is a simple project to get magento's catalog and bring to your vtex store. Have two branches in this repository:
 
-#This base repo needs
+Master with the base code, and IncludinSmartFunctions with beta code.
+
+#Project requirements
 - <a href=http://php.net/downloads.php>PHP 5</a>
 - <a href=https://www.mysql.com/downloads/>MYSQL</a>
-
-#The beta repo needs
-- <a href=http://php.net/downloads.php>PHP 5</a>
-- <a href=https://www.mysql.com/downloads/>MYSQL</a>
-- <a href=http://php.net/manual/pt_BR/book.imagick.php>PHP imagick:</a> sudo apt-get install php5-imagick
+- <a href=http://php.net/manual/pt_BR/book.imagick.php>PHP imagick (only for beta version)</a> 
+```
+sudo apt-get install php5-fpm php5-mysql
+```
+```
+sudo apt-get install php5-imagick
+```
 
 #Using MagentoToVtex Beta
 
-Visit http://magentotovtex.primordia.com.br/
-
-Fill the form with all data needed.
+Visit http://magentotovtex.primordia.com.br/ and just fill the form.
 
 #Explaining the fields from first screen
 
