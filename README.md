@@ -9,7 +9,7 @@ MagentoToVtex is a simple project to get magento's catalog and bring to your vte
 
 Master with the base code, and IncludinSmartFunctions with beta code.
 
-#The repository needs
+#Project requirements
 - <a href=http://php.net/downloads.php>PHP 5</a>
 - <a href=https://www.mysql.com/downloads/>MYSQL</a>
 - <a href=http://php.net/manual/pt_BR/book.imagick.php>PHP imagick (only for beta version)</a> 
