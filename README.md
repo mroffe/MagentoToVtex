@@ -5,9 +5,9 @@ Vtex integration for Magento stores.
 
 http://magentotovtex.primordia.com.br/
 
-MagentoToVtex is a simple project to get magento's catalog and bring to your vtex store. Have two branches in this repository:
+MagentoToVtex is a simple project to help you migrate your magento's catalog and to your VTEX store. 
 
-Master with the base code, and IncludinSmartFunctions with beta code.
+On this repository, there are two branches: *Master* is the base stable code but also there is *IncludinSmartFunctions* as beta code.
 
 #Project requirements
 - <a href=http://php.net/downloads.php>PHP 5</a>
@@ -20,73 +20,73 @@ sudo apt-get install php5-fpm php5-mysql
 sudo apt-get install php5-imagick
 ```
 
-#Using MagentoToVtex Beta
+#Using MagentoToVtex
 
-Visit http://magentotovtex.primordia.com.br/ and just fill the form.
+It's quite simple to use it, just Visit http://magentotovtex.primordia.com.br/ and fill the form.
 
-#Explaining fields from first screen
+#Step 1 Fields
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s29.postimg.org/dxf30me1j/image.png></a>
 
 <b>Store Name</b>
-- Needed to the MagentoConnector Class, is the name of store. Ex: mystore.
+- Magento store name. *Ex: mystore*
 
 <b>Store url</b> 
-- Needed to the MagentoConnector Class, is the url of store. Ex: www.mystore.com
+- Magento store url. *Ex: www.mystore.com*
 
 <b>User</b>
-- Needed to the MagentoConnector Class, is the name used to login in magento webservice. Ex: magentouser
+- Magento login, required to access magento webservice. *Ex: magentouser*
 
 <b>Password</b>
-- Needed to the MagentoConnector Class, is the password used to login in magento webservice. Ex: mypass123
+- Magento password, required to access magento webservice. *Ex: mypass123*
 
 <b>DB Host</b>
-- Needed to MagentoConnector Class, is the url to magento's database. Ex: 155.234.112.40 or mydb.myhost.com
+- Magento database host. *Ex: 155.234.112.40 OR mydb.myhost.com*
 
 <b>DB Name</b>
-- Needed to MagentoConnector Class, is the name of the magento's database. Ex: mystoredb
+- Magento database name. *Ex: mystoredb*
 
 <b>User DB</b>
-- Needed to MagentoConnector Class, is the name used to log in the magento's database. Ex: myuserdb
+- Magento database user name. *Ex: myuserdb*
 
 <b>Pass DB</b>
-- Needed to MagentoConnector Class, is the password used to log in the magento's database. Ex: mypass123
+- Magento database user password. *Ex: mypass123*
 
 <b>To Do</b>
-- Defines the target, send products or list the magento's attribute ( like color or size).
+- Defines data to be migrated. You can send products data or attributes infomations ( like: color, size ...)
 
-#Explaining fields from second screen
+#Step 2 Fields
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s15.postimg.org/ssbhk6q1n/image.png></a>
 
 <b>Account Name</b>
-- Needed to VtexConnector Class, is the account name from vtex. Can be found in license manager -> accounts. Ex: myvtexstore.
+- VTEX LicenseManager account name. Can be found in **License Manager -> Accounts**. *Ex: myvtexstore*
 
 <b>Vtex WebService User</b>
-- Needed to VtexConnector Class, is the user used to connect in the vtex's webservice. Ex: myvtexuser.
+- VTEX Webservice user name. *Ex: myvtexuser*
 
 <b>Vtex Webservice Pass</b>
-- Needed to VtexConnector Class, is the password used to connect in the vtex's webservice. Ex: mypass123.
+- VTEX Webservice user password. *Ex: mypass123*
 
 <b>Department ID</b>
-- Needed to ProductService Class, is the id from vtex's department. Ex: 1
+- VTEX department id to where data should be migrated. *Ex: 1*
 
 <b>Category ID</b>
-- Needed to ProductService Class, is the id from vtex's category. Ex: 13
+- VTEX category id to where data should be migrated. *Ex: 13*
 
 ###Note: If you use only one level of categories, the department id and category can be the same.
 
 <b>Brand ID</b>
-- Needed to ProductService Class, is the id from vtex's brand section. Ex: 2000000
+- VTEX brand section id. *Ex: 2000000*
 
-#Explaining fields from third screen
+#Step 3 Fields
 
 <a href=http://magentotovtex.primordia.com.br/><img src=http://s21.postimg.org/yzc6284gn/image.png></a>
 
 <b>The sku field</b>
-- Put the magento's skus, one per line. If you do not set any, all will be send.
+- Define Magento's skus to be migrated. If you leave empty all data will be migrated.
 
 <b>The log</b>
 - Is the log of all actions, can be scrolled.
 
-###Note: Click in send button only one time, and wait the finish message in log. You can send again after finish the first process.
+###Note: Click in send button only one time, and wait the finish message in log.
