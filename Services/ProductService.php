@@ -304,6 +304,8 @@ class ProductService {
     }
 
     private static function createImageforSku($sku,$imageList){
+        
+        $picture = 1;
 
         foreach($imageList as $image){
 
@@ -324,16 +326,22 @@ class ProductService {
 
             $img = preg_replace('/[^a-z0-9 -]+/', '', $sku->StockKeepingUnitInsertUpdateResult->Name);
             $img = str_replace(' ', '-', $img);
+            
+            if($picture==2){
+                $label = "Hover";
+            }else{
+                $label = "Front";
+            }
 
-            $data = array(
-                'urlImage' => $imageUrl,
-                'imageName' => $img,
-                'stockKeepingUnitId' => $sku->StockKeepingUnitInsertUpdateResult->Id
+            $data = array('image' => array(
+                'Url' => $imageUrl,
+                'Label' => $label,
+                'StockKeepingUnitId' => $sku->StockKeepingUnitInsertUpdateResult->Id
 
-            );
+            ) ) ;
 
             try{
-                VtexConnector::$ws->ImageServiceInsertUpdate($data);
+                VtexConnector::$ws->ImageInsertUpdate($data);
             }catch (Exception $e){
                 Logger::alert('</br>Falha ao inserir imagem a sku.',$e,VtexConnector::$ws->__getLastRequest());
             }
